@@ -1,0 +1,32 @@
+services:
+  epenal-backend:
+    image: 'mcruzt/epenal-backend:v0.1'
+    container_name: epenal-backend
+    depends_on:
+      - epenaldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://epenaldb:5432/epenaldb
+      - SPRING_DATASOURCE_USERNAME=epenal
+      - SPRING_DATASOURCE_PASSWORD=epenal
+      - ENV_PROFILE=pr
+
+  epenaldb:
+    image: 'postgres'
+    container_name: epenaldb
+    environment:
+      - POSTGRES_USER=epenal
+      - POSTGRES_PASSWORD=epenal
+      - PGDATA=/data/postgres
+      - POSTGRES_DB=epenaldb
+    volumes:
+      - epenaldb:/data/postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: /bin/bash -c "until pg_isready -U ${POSTGRES_USER} -p 5432; do sleep 1; done; psql -U ${POSTGRES_USER} -c 'CREATE DATABASE other;'"
+    ports:
+      - "6000:5432"
+volumes:
+  epenaldb:

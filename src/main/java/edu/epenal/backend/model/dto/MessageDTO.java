@@ -1,4 +1,4 @@
-package edu.epenal.backend.dto;
+package edu.epenal.backend.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

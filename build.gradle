@@ -5,12 +5,16 @@ plugins {
 }
 
 group = 'edu.epenal.back-end'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+
+bootJar {
+	archiveFileName = 'epenal-backend.jar'
+}
 }
 
 configurations {
@@ -25,8 +29,11 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

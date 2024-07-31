@@ -1,0 +1,29 @@
+GET http://localhost:8082/user
+Accept: application/json
+
+<> 2024-07-30T214308.200.json
+
+###
+
+PUT http://localhost:8082/user
+Content-Type: application/json
+
+{
+"name":"user one"
+}
+
+<> 2024-07-30T214243.200.json
+
+###
+
+PUT http://localhost:8082/user
+Accept: application/json
+
+{
+"name":"user one"
+}
+
+<> 2024-07-30T214202.415.json
+
+###
+

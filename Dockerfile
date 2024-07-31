@@ -4,10 +4,20 @@ COPY . /epenal-backend
 
 WORKDIR /epenal-backend
 
-RUN ./gradlew clean bootJar
+#RUN ./gradlew clean bootJar
+
+ARG ENV_PROFILE
+
+ARG SPRING_DATASOURCE_URL
+ARG SPRING_DATASOURCE_USERNAME
+ARG SPRING_DATASOURCE_PASSWORD
+
+ENV ENV_VAL=${ENV_PROFILE}
+
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+ENV SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 
 EXPOSE 8080
 
-ENV ENV_PROFILE=$ENV_PROFILE
-
-ENTRYPOINT ["java", "-Dspring.profiles.active=${ENV_PROFILE}", "-Depenal.message=epenal", "-jar","build/libs/epenal-backend.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${ENV_VAL}", "-Depenal.message=epenal", "-jar","build/libs/epenal-backend.jar"]

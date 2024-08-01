@@ -1,6 +1,6 @@
 services:
   epenal-backend:
-    image: 'mcruzt/epenal-backend:v0.1'
+    image: 'epenal-backend:v.0.1'
     container_name: epenal-backend
     depends_on:
       - epenaldb

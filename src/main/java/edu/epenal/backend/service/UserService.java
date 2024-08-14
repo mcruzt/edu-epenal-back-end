@@ -21,7 +21,7 @@ public class UserService {
 
 
     public List<UserDTO> getAllUsers(){
-        return userRepository.findAll().stream().map(user -> new UserDTO(user.getId(), user.getName())).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(user -> new UserDTO(user.getId(), user.getName())).toList();
     }
 
     public UserDTO upsertUser(UserDTO user){

@@ -28,12 +28,13 @@ pipeline {
         stage('SonarQube Analysis') {
             environment {
                 // SonarQube environment variables
-                SONARQUBE_URL = 'http://localhost:9003'
+                SONARQUBE_URL = 'http://192.168.0.16:9003'
                 SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
+                SONAR_PROJECT_KEY = 'epenal-backend'
             }
             steps {
                 // Run SonarQube analysis
-                sh './gradlew sonar -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}'
+                sh './gradlew sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}'
             }
         }
 

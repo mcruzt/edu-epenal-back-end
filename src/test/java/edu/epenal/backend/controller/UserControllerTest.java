@@ -1,5 +1,6 @@
 package edu.epenal.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.epenal.backend.model.dto.UserDTO;
 import edu.epenal.backend.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
@@ -42,5 +46,19 @@ class UserControllerTest {
         mockMvc.perform(get("/user"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name", is("Usuario")));
+    }
+
+    @Test
+    void testPutEndpoint() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        // Mock the service layer response
+        UserDTO user = new UserDTO(1L,"Usuario");
+        when(mockUserService.upsertUser(any())).thenReturn(user);
+
+        // Perform PUT request and verify the response
+        mockMvc.perform(put("/user").contentType(APPLICATION_JSON).content(mapper.writeValueAsString(new UserDTO(null,"Usuario"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Usuario")));
     }
 }

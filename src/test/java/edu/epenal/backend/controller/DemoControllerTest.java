@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,6 +27,6 @@ class DemoControllerTest {
         // Perform GET request and verify the response
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", is("Welcome to MacBook-Pro-de-Maribel-2.local!!!")));
+                .andExpect(jsonPath("$.message", startsWith("Welcome to ")));
     }
 }

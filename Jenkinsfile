@@ -4,10 +4,15 @@ pipeline {
     environment {
         // Define environment variables
         GITHUB_REPO = 'https://github.com/mcruzt/edu-epenal-back-end.git'
+        DOCKER_REPO = 'https://registry.hub.docker.com'
         DOCKER_IMAGE = 'mcruzt/epenal-backend:latest'
         K8S_NAMESPACE = 'default'
         K8S_DEPLOYMENT = 'epenal-backend'
         ENV_PROFILE = 'pr'
+        // SonarQube environment variables
+        SONARQUBE_URL = 'http://192.168.0.16:9003'
+        SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
+        SONAR_PROJECT_KEY = 'epenal-backend'
     }
 
     stages {
@@ -18,20 +23,14 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Unit Test') {
             steps {
                 // Build the project using Gradle
-                sh './gradlew clean build'
+                sh './gradlew clean test'
             }
         }
 
-        stage('SonarQube Analysis') {
-            environment {
-                // SonarQube environment variables
-                SONARQUBE_URL = 'http://192.168.0.16:9003'
-                SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
-                SONAR_PROJECT_KEY = 'epenal-backend'
-            }
+        stage('Sonar Analysis') {
             steps {
                 // Run SonarQube analysis
                 sh './gradlew sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${SONARQUBE_TOKEN}'
@@ -42,25 +41,23 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    docker.build("${DOCKER_IMAGE}")
+                   def epenalImage = docker.build("${DOCKER_IMAGE}",". --build-arg ENV_PROFILE=pr")
+                    // Push Docker image to repository
+                    docker.withRegistry("${DOCKER_REPO}", 'DOCKER_HUB') {
+                        epenalImage.push()
+                    }
                 }
             }
         }
 
         stage('Kubernetes Deployment') {
             steps {
-                script {
-                    // Push Docker image to repository
-                    docker.withRegistry('https://your-docker-repo', 'docker-credentials-id') {
-                        docker.image("${DOCKER_IMAGE}").push()
+                
+                   withCredentials([string(credentialsId: 'MINIKUBE', variable: 'api_token')]) 
+                   {
+                      sh 'kubectl --token $api_token --server https://192.168.64.13:8443  --insecure-skip-tls-verify=true apply -f kubernetes/back-end/epenal-backend-deployment.yaml '
                     }
-
-                    // Deploy to Kubernetes
-                    sh """
-                    kubectl set image deployment/${K8S_DEPLOYMENT} ${K8S_DEPLOYMENT}=${DOCKER_IMAGE} --namespace=${K8S_NAMESPACE}
-                    kubectl rollout status deployment/${K8S_DEPLOYMENT} --namespace=${K8S_NAMESPACE}
-                    """
-                }
+                
             }
         }
     }

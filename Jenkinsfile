@@ -7,7 +7,7 @@ pipeline {
         DOCKER_REPO = 'https://registry.hub.docker.com'
         DOCKER_IMAGE = 'mcruzt/epenal-backend:v.0.3'
         // SonarQube environment variables
-        SONARQUBE_URL = 'http://192.168.4.24:9003'
+        SONARQUBE_URL = 'http://192.168.100.126:9003'
         SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
         SONAR_PROJECT_KEY = 'epenal-backend'
     }

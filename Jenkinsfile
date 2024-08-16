@@ -5,12 +5,9 @@ pipeline {
         // Define environment variables
         GITHUB_REPO = 'https://github.com/mcruzt/edu-epenal-back-end.git'
         DOCKER_REPO = 'https://registry.hub.docker.com'
-        DOCKER_IMAGE = 'mcruzt/epenal-backend:latest'
-        K8S_NAMESPACE = 'default'
-        K8S_DEPLOYMENT = 'epenal-backend'
-        ENV_PROFILE = 'pr'
+        DOCKER_IMAGE = 'mcruzt/epenal-backend:v.0.3'
         // SonarQube environment variables
-        SONARQUBE_URL = 'http://192.168.0.16:9003'
+        SONARQUBE_URL = 'http://192.168.4.24:9003'
         SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
         SONAR_PROJECT_KEY = 'epenal-backend'
     }

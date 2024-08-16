@@ -9,7 +9,7 @@ pipeline {
         // SonarQube environment variables
         SONARQUBE_URL = 'http://192.168.100.126:9003'
         SONARQUBE_TOKEN = credentials('SONAR_ACCESS')
-        SONAR_PROJECT_KEY = 'epenal-backend'
+        SONAR_PROJECT_KEY = 'epenal'
     }
 
     stages {
